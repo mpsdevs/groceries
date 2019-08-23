@@ -1,1 +1,1 @@
-<Frame defaultPage="views/login/login-page"></Frame>
+<Frame defaultPage="~/views/login/login-page"></Frame>

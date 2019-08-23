@@ -12,41 +12,27 @@ function User(info) {
   });
 
   viewModel.login = function () {
-    return fetchModule.fetch(config.apiUrl +
-      "user/" + config.appKey + "/login", {
-        method: "POST",
-        body: JSON.stringify({
-          username: viewModel.get("email"),
-          password: viewModel.get("password")
-        }),
-        headers: getCommonHeaders()
-      })
-      .then(handleErrors)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        config.token = data._kmd.authtoken;
-      });
+    this.database.execSQL("INSERT INTO user (email, password) VALUES (?, ?)", [viewModel.get("email"), viewModel.get("password")]).then(id => {console.log("INSERT RESULT", id);this.fetch();}, error => {console.log("INSERT ERROR", error);
+  });
   };
-  viewModel.register = function() {
-    if (!viewModel.get("email") || !viewModel.get("password")) {
-      return Promise.reject(new Error("Please provide both an email address and password."));
-    }
+//   viewModel.register = function() {
+//     if (!viewModel.get("email") || !viewModel.get("password")) {
+//       return Promise.reject(new Error("Please provide both an email address and password."));
+//     } 
     
-    return fetchModule.fetch(config.apiUrl + "user/" + config.appKey, {
-      method: "POST",
-      body: JSON.stringify({
-        username: viewModel.get("email"),
-        email: viewModel.get("email"),
-        password: viewModel.get("password")
-      }),
-      headers: getCommonHeaders()
-    }).then(handleErrors);
-} ;
+//     return fetchModule.fetch(config.apiUrl + "user/" + config.appKey, {
+//       method: "POST",
+//   body: JSON.stringify({
+//         username: viewModel.get("email"),
+//         email: viewModel.get("email"),
+//         password: viewModel.get("password")
+//       }),
+//       headers: getCommonHeaders()
+//     }).then(handleErrors);
+// } ;
 
   return viewModel;
-}
+  }
 
 function getCommonHeaders() {
   return {
